@@ -9,7 +9,7 @@ namespace HomeWorkNumber2
         private const int DEFAULT_TIMEOUT_SECONDS = 10;
         private static IWebDriver _driver;
 
-        protected BasePage(IWebDriver driver)
+        protected BasePage (IWebDriver driver)
         {
             _driver = driver;
         }

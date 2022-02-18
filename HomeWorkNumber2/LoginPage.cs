@@ -4,26 +4,29 @@ namespace HomeWorkNumber2
 {
     public class LoginPage : BasePage
     {
-        private const string LOGIN_FIELD_ID = "passp-field-login";
-        private const string ENTER_BUTTON_ID = "passp:sign-in";
-        private const string PASSWORD_FIELD_ID = "passp-field-passwd";
+        private IWebElement LoginButton;
+        private IWebElement LoginField;
+        private IWebElement EnterBtn;
+        private IWebElement PasswordField;
         public LoginPage(IWebDriver driver) : base(driver)
         {
-
+            //LoginButton = GetDriver().FindElement(By.XPath("//span[@class = 'button2__text']"));
+            //LoginField = GetDriver().FindElement(By.Id("passp-field-login"));
+            //EnterBtn = GetDriver().FindElement(By.Id("passp:sign-in"));
+            //PasswordField = WaitAndFindElement(By.Id("passp-field-passwd"));
         }
 
         public void Login(string login, string password)
         {
-            IWebElement loginButton = GetDriver().FindElement(By.XPath("//a[@href = 'https://passport.yandex.ru/auth?from=mail&origin=hostroot_homer_auth_ru&retpath=https%3A%2F%2Fmail.yandex.ru%2F&backpath=https%3A%2F%2Fmail.yandex.ru%3Fnoretpath%3D1']"));
-            loginButton.Click();
-            IWebElement loginBox = GetDriver().FindElement(By.Id(LOGIN_FIELD_ID));
-            loginBox.SendKeys(login);
-            IWebElement enterBtn = GetDriver().FindElement(By.Id(ENTER_BUTTON_ID));;
-            enterBtn.Click();
-            IWebElement passBox = WaitAndFindElement(By.Id(PASSWORD_FIELD_ID));
-            passBox.SendKeys(password);
-            IWebElement enterBtnAgain = WaitAndFindElement(By.Id(ENTER_BUTTON_ID));
-            enterBtnAgain.Click();
+            LoginButton = GetDriver().FindElement(By.XPath("//a[@href = 'https://passport.yandex.ru/auth?from=mail&amp;origin=hostroot_homer_auth_ru&amp;retpath=https%3A%2F%2Fmail.yandex.ru%2F&amp;backpath=https%3A%2F%2Fmail.yandex.ru%3Fnoretpath%3D1']"));
+            LoginButton.Click();
+            LoginField = GetDriver().FindElement(By.Id("passp-field-login"));
+            LoginField.SendKeys(login);
+            EnterBtn = GetDriver().FindElement(By.Id("passp:sign-in"));
+            EnterBtn.Click();
+            PasswordField = WaitAndFindElement(By.Id("passp-field-passwd"));
+            PasswordField.SendKeys(password);
+            EnterBtn.Click();
         }
 
         public string CheckingAccount()
