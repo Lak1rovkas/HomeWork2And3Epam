@@ -8,9 +8,14 @@ namespace HomeWorkNumber2
     public class HomeWork2
     {
         private const string URL = "https://mail.yandex.ru/";
+
         private static IWebDriver driver;
+
         private MainPage mainPage;
         private LoginPage loginPage;
+        private UserAccount userAccount = new UserAccount(@"C:\Users\zampir\source\repos\HomeWorkNumber2\HomeWorkNumber2\MailAndPassword\user.txt");
+        private DraftsForm draftsForm;
+        private SentForm sentForm;
 
         [SetUp]
         public void startBrowser()
@@ -20,37 +25,23 @@ namespace HomeWorkNumber2
 
             mainPage = new MainPage(driver);
             loginPage = new LoginPage(driver);
+            draftsForm = new DraftsForm(driver);
+            sentForm = new SentForm(driver);
 
             mainPage.GetDriver().Navigate().GoToUrl(URL);
             mainPage.Open();
         }
 
-        public LoginClass GetUser()
-        {
-            int choice = int.Parse(Console.ReadLine());
 
-            switch(choice)
-            {
-                case 1:
-                    LoginClass user = new LoginClass("user");
-                    return user;
-                case 2:
-                    LoginClass admin = new LoginClass("admin");
-                    return admin;
-                default:
-                    Console.WriteLine("Wrong choice of user type. Try again later");
-                    throw new Exception(); //There should be specific exception, but I don't now which one
-            }
-        }
 
         [Test]
         public void createEmail_whenLoginPassSpecified_shouldCreateEmail()
         {
-            loginPage.Login(GetUser().GetLogin(), GetUser().GetPassword());
+            loginPage.Login(userAccount.Login, userAccount.Password);
             mainPage.FillingALetter();
             string result = loginPage.CheckingAccount();
 
-            Assert.AreEqual(GetUser().GetLogin(), result);
+            Assert.AreEqual(userAccount.Login, result);
 
             mainPage.LogOut();
         }
@@ -58,10 +49,10 @@ namespace HomeWorkNumber2
         [Test]
         public void checkingAndDeletingDrafts_whenDraftTopicFound_shouldDeleteTheDraft()
         {
-            loginPage.Login(GetUser().GetLogin(), GetUser().GetPassword());
-            mainPage.SearchAndRemoveDrafts();
+            loginPage.Login(userAccount.Login, userAccount.Password);
+            draftsForm.SearchAndRemoveDrafts();
 
-            Assert.IsTrue(mainPage.IsTopicOfDraftAbsent());
+            Assert.IsTrue(draftsForm.IsTopicOfDraftAbsent());
 
             mainPage.LogOut();
         }
@@ -69,10 +60,10 @@ namespace HomeWorkNumber2
         [Test]
         public void checkingAndSendingMails_whenMailSent_shouldCheckMailInInboxAndSent()
         {
-            loginPage.Login(GetUser().GetLogin(), GetUser().GetPassword());
-            mainPage.FillingALetterTest2();
+            loginPage.Login(userAccount.Login, userAccount.Password);
+            mainPage.FillingALetterVersion2();
 
-            Assert.IsTrue(mainPage.DoesTheSentMailExistInTheSents());
+            Assert.IsTrue(sentForm.DoesTheSentMailExistInTheSents());
             Assert.IsTrue(mainPage.DoesTheSentMailExistInTheInbox());
 
             mainPage.LogOut();

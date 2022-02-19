@@ -29,7 +29,7 @@ namespace HomeWorkNumber2
             return !IsElementPresent(by);
         }
 
-        public static IWebElement WaitAndFindElement(By by)
+        public IWebElement WaitAndFindElement(By by)
         {
             var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(DEFAULT_TIMEOUT_SECONDS));
             return wait.Until(drv => drv.FindElement(by));

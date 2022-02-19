@@ -4,16 +4,14 @@ namespace HomeWorkNumber2
 {
     public class LoginPage : BasePage
     {
-        private IWebElement LoginButton;
-        private IWebElement LoginField;
-        private IWebElement EnterBtn;
-        private IWebElement PasswordField;
+        public IWebElement LoginButton { get; private set; }
+        public IWebElement LoginField { get; private set; }
+        public IWebElement EnterBtn { get; private set; }
+        public IWebElement PasswordField { get;  private set; }
+        public IWebElement mailCheck { get; private set; }
         public LoginPage(IWebDriver driver) : base(driver)
         {
-            //LoginButton = GetDriver().FindElement(By.XPath("//span[@class = 'button2__text']"));
-            //LoginField = GetDriver().FindElement(By.Id("passp-field-login"));
-            //EnterBtn = GetDriver().FindElement(By.Id("passp:sign-in"));
-            //PasswordField = WaitAndFindElement(By.Id("passp-field-passwd"));
+
         }
 
         public void Login(string login, string password)
@@ -31,8 +29,8 @@ namespace HomeWorkNumber2
 
         public string CheckingAccount()
         {
-            IWebElement mail = GetDriver().FindElement(By.ClassName("legouser__menu-header")).FindElement(By.ClassName("user-account__subname"));
-            return mail.GetAttribute("textContent");
+            mailCheck = GetDriver().FindElement(By.ClassName("legouser__menu-header")).FindElement(By.ClassName("user-account__subname"));
+            return mailCheck.GetAttribute("textContent");
         }
     }
 }
