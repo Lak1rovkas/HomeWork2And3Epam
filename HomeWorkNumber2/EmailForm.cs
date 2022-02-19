@@ -1,20 +1,14 @@
 ﻿using OpenQA.Selenium;
+using System;
 
 namespace HomeWorkNumber2
 {
     class EmailForm
     {
-        private const string TOPIC_OF_THE_LETTER = "My favorite football teams";
-        private const string DESTINATION_EMAIL_ADDRESS = "ale01.0134@gmail.com";
-        private const string MESSAGE_IN_A_LETTER = "Tottenham, Inter Milan and Zenit Saint-Petersburg forever :)";
-        private const string TOPIC_OF_THE_LETTER_VERSION_2 = "Where am I from?";
-        private const string DESTINATION_EMAIL_ADDRESS_VERSION_2 = "lakirovkas85@yandex.ru";
-        private const string MESSAGE_IN_A_LETTER_VERSION_2 = "Russia, Saint-Petersburg";
-
         private const string XPATH_OF_ADRESSEE_OF_THE_LETTER = "//div[@class = 'composeYabbles']";
         private const string XPATH_OF_TOPIC_OF_THE_LETTER = "//input[@name = 'subject']";
         private const string XPATH_OF_TEXT_OF_THE_LETTER = "//div[@class = 'cke_wysiwyg_div cke_reset cke_enable_context_menu cke_editable cke_editable_themed cke_contents_ltr cke_htmlplaceholder']";
-        private const string XPATH_OF_CLOSE_BTN = "//button[@class = 'ControlButton-Button']";
+        private const string XPATH_OF_CLOSE_BTN = "//div[@class = 'ControlButton ControlButton_button_close']";
         private const string XPATH_OF_SEND_BTN = "//button[@class = 'Button2 Button2_pin_circle-circle Button2_view_default Button2_size_l']";
 
         private readonly IWebDriver _driver;
@@ -26,6 +20,8 @@ namespace HomeWorkNumber2
 
         public EmailForm(IWebDriver driver)
         {
+            if (driver == null) throw new NullReferenceException("Parameter argument is NULL");   
+            
             _driver = driver;
             AdresseeOfTheLetter = _driver.FindElement(By.XPath(XPATH_OF_ADRESSEE_OF_THE_LETTER));
             TopicOfTheLetter = _driver.FindElement(By.XPath(XPATH_OF_TOPIC_OF_THE_LETTER));
@@ -34,22 +30,23 @@ namespace HomeWorkNumber2
             SendBtn = _driver.FindElement(By.XPath(XPATH_OF_SEND_BTN));
         }
 
-        public void FillingALetter(string adresseeOfTheLetter)
+        private void FillALetter(string adresseeOfTheLetter, string topic, string text)
         {
-            if (adresseeOfTheLetter == DESTINATION_EMAIL_ADDRESS)
-            {
-                AdresseeOfTheLetter.SendKeys(DESTINATION_EMAIL_ADDRESS);
-                TopicOfTheLetter.SendKeys(TOPIC_OF_THE_LETTER);
-                TextOfTheLetter.SendKeys(MESSAGE_IN_A_LETTER);
-                CloseBtn.Click();
-            }
-            if (adresseeOfTheLetter == DESTINATION_EMAIL_ADDRESS_VERSION_2)
-            {
-                AdresseeOfTheLetter.SendKeys(DESTINATION_EMAIL_ADDRESS_VERSION_2);
-                TopicOfTheLetter.SendKeys(TOPIC_OF_THE_LETTER_VERSION_2);
-                TextOfTheLetter.SendKeys(MESSAGE_IN_A_LETTER_VERSION_2);
-                SendBtn.Click();
-            }
+            AdresseeOfTheLetter.SendKeys(adresseeOfTheLetter);
+            TopicOfTheLetter.SendKeys(topic);
+            TextOfTheLetter.SendKeys(text);           
+        }
+
+        public void FillAndSafeLetter(string adresseeOfTheLetter, string topic, string text)
+        {
+            FillALetter(adresseeOfTheLetter, topic, text);
+            CloseBtn.Click();
+        }
+
+        public void FillAndSendLetter(string adresseeOfTheLetter, string topic, string text)
+        {
+            FillALetter(adresseeOfTheLetter, topic, text);
+            SendBtn.Click();
         }
     }
 }

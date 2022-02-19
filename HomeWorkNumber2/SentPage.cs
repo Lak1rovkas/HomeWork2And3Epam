@@ -2,7 +2,7 @@
 
 namespace HomeWorkNumber2
 {
-    class SentForm : MainPage
+    class SentPage : MainPage
     {
         private const string XPATH_OF_CHECK_MAIL_BOX = "//div[@data-key = 'box=messages-item-box']";
         private const string XPATH_OF_SENT_BTN = "//a[@data-title = 'Отправленные']";
@@ -10,17 +10,17 @@ namespace HomeWorkNumber2
         private readonly IWebDriver _driver;
 
         public IWebElement SentBtn { get; private set; }
-        public IWebElement SearchForASpecificTopic { get; private set; }
 
-        public SentForm (IWebDriver driver) : base(driver)
+        public SentPage (IWebDriver driver) : base(driver)
         {
             _driver = driver;
             SentBtn = _driver.FindElement(By.XPath(XPATH_OF_SENT_BTN));
         }
-        public bool DoesTheSentMailExistInTheSents()
+
+        public bool DoesTheSentMailExistInTheSents(string topic)
         {
             SentBtn.Click();
-            SearchTopicVersion2();
+            SearchForEmail(topic);
             return IsElementPresent(By.XPath(XPATH_OF_CHECK_MAIL_BOX));
         }
     }

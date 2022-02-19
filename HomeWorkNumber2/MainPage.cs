@@ -4,11 +4,7 @@ namespace HomeWorkNumber2
 {
     public class MainPage : BasePage
     {
-        private const string TOPIC_OF_THE_LETTER_VERSION_2 = "Where am I from?";
-        private const string DESTINATION_EMAIL_ADDRESS = "ale01.0134@gmail.com";
-        private const string DESTINATION_EMAIL_ADDRESS_VERSION_2 = "lakirovkas85@yandex.ru";
         private const string XPATH_OF_WRITE_LETTER_BTN = "//a[@class = 'mail-ComposeButton js-main-action-compose']";
-        private const string XPATH_OF_REFRESH_BTN = "//span[@data-click-action = 'mailbox.check']";
         private const string XPATH_OF_SEARCH_BTN = "//button[@class = 'control button2 button2_view_default button2_tone_mail-suggest-themed button2_size_n button2_theme_normal button2_pin_clear-round button2_type_submit search-input__form-button']";
         private const string XPATH_OF_SEARCH_FIELD = "//input[@class = 'textinput__control']";
         private const string XPATH_OF_CHECK_MAIL_BOX = "//div[@data-key = 'box=messages-item-box']";
@@ -16,59 +12,62 @@ namespace HomeWorkNumber2
         private const string XPATH_OF_PRESS_AVATAR = "//div[@class = 'PSHeader-User']";
         private const string XPATH_OF_LOGOUT_BTN = "//a[@class = 'menu__item menu__item_type_link count-me legouser__menu-item legouser__menu-item_action_exit legouser__menu-item legouser__menu-item_action_exit']";
 
+        public IWebElement SearchBtn { get; private set; }
+        public IWebElement InboxBtn { get; private set; }
+        public IWebElement PressAvatar { get; private set; }
+        public IWebElement LogOutBtn { get; private set; }
+        public IWebElement WriteLetterBtn { get; private set; }
+        public IWebElement SearchForASpecificTopic { get; private set; }
+
         public MainPage(IWebDriver driver) : base(driver)
-        {
+        {            
         }
 
-        public void Open()
+        public void FillAndSafeLetter(string adresseeOfTheLetter, string topic, string text)
         {
-            GetDriver().Manage().Window.Maximize();
-        }
-
-        public void FillingALetter()
-        {
+            WriteEmail();
             var emailForm = new EmailForm(GetDriver());
-            IWebElement WriteLetterBtn = GetDriver().FindElement(By.XPath(XPATH_OF_WRITE_LETTER_BTN));
-            WriteLetterBtn.Click();
-            emailForm.FillingALetter(DESTINATION_EMAIL_ADDRESS);
+            emailForm.FillAndSafeLetter(adresseeOfTheLetter, topic, text);
         }
-
-        public void FillingALetterVersion2()
+        public void FillAndSendLetter(string adresseeOfTheLetter, string topic, string text)
         {
+            WriteEmail();
             var emailForm = new EmailForm(GetDriver());
-            IWebElement WriteLetterBtn = GetDriver().FindElement(By.XPath(XPATH_OF_WRITE_LETTER_BTN));
-            WriteLetterBtn.Click();
-            emailForm.FillingALetter(DESTINATION_EMAIL_ADDRESS_VERSION_2);
-            IWebElement RefreshBtn = GetDriver().FindElement(By.XPath(XPATH_OF_REFRESH_BTN));
-            RefreshBtn.Click();
+            emailForm.FillAndSendLetter(adresseeOfTheLetter, topic, text);
         }
 
-        public bool DoesTheSentMailExistInTheInbox()
+        public bool DoesTheSentMailExistInTheInbox(string topic)
         {
-            IWebElement InboxBtn = GetDriver().FindElement(By.XPath(XPATH_OF_INBOX_BTN));
+            InboxBtn = GetDriver().FindElement(By.XPath(XPATH_OF_INBOX_BTN));
             InboxBtn.Click();
-            SearchTopicVersion2();
+            SearchForEmail(topic);
+            SearchBtn.Click();
             return IsElementPresent(By.XPath(XPATH_OF_CHECK_MAIL_BOX));
         }
 
-        public void SearchTopicVersion2()
+        public void SearchForEmail(string topic)
         {
-            IWebElement SearchForASpecificTopic = GetDriver().FindElement(By.XPath(XPATH_OF_SEARCH_FIELD));
-            SearchForASpecificTopic.SendKeys(TOPIC_OF_THE_LETTER_VERSION_2);
-            IWebElement SearchBtn = GetDriver().FindElement(By.XPath(XPATH_OF_SEARCH_BTN));
-            SearchBtn.Click();
+            SearchForASpecificTopic = GetDriver().FindElement(By.XPath(XPATH_OF_SEARCH_FIELD));
+            SearchForASpecificTopic.SendKeys(topic);
+            SearchBtn = GetDriver().FindElement(By.XPath(XPATH_OF_SEARCH_BTN));            
         }
 
         public void LogOut()
         {
-            IWebElement PressAvatar = GetDriver().FindElement(By.XPath(XPATH_OF_PRESS_AVATAR)); //It's need cause we can't press LogOutBtn without click on avatar
-            PressAvatar.Click();
-            IWebElement LogOutBtn = GetDriver().FindElement(By.XPath(XPATH_OF_LOGOUT_BTN));
+            GetLogOutBtns();
+            PressAvatar.Click();            
             LogOutBtn.Click();
         }
-        public void Close()
+
+        private void WriteEmail()
         {
-            GetDriver().Close();
-        }        
+            WriteLetterBtn = GetDriver().FindElement(By.XPath(XPATH_OF_WRITE_LETTER_BTN));
+            WriteLetterBtn.Click();
+        }
+        private void GetLogOutBtns()
+        {
+            PressAvatar = GetDriver().FindElement(By.XPath(XPATH_OF_PRESS_AVATAR)); //It's need cause we can't press LogOutBtn without click on avatar
+            LogOutBtn = GetDriver().FindElement(By.XPath(XPATH_OF_LOGOUT_BTN));
+        }
     }
 }
